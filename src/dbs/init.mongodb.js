@@ -1,7 +1,11 @@
 'use strict'    
 
 const mongoose = require('mongoose')
-const connectString = "mongodb+srv://toantranv1966:5g8g1g3b@cluster0.epuw6ei.mongodb.net/eBakery-db"
+const { db: {host, name, port}} = require('../configs/config.mongodb')
+// const connectString = "mongodb+srv://toantranv1966:5g8g1g3b@cluster0.epuw6ei.mongodb.net/eBakery-db"
+const connectString = `mongodb://${host}:${port}/${name}`
+// const connectString = `mongodb://localhost:27017/shopDev`
+console.log('connectString::', connectString)
 
 mongoose.connect(connectString).then( _ => console.log(`Connected Mongodb Success PRO`))
 .catch( err => console.log('Error Connect!'))
