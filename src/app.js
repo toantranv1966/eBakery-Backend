@@ -6,28 +6,41 @@ const morgan = require('morgan')
 const compression = require('compression')
 const app = express()
 
+const mongoose = require('mongoose')
+
 // init middlewares
 app.use(morgan("dev")) 
 app.use(helmet())
 app.use(compression())
+app.use(express.json())
+app.use(express.urlencoded({
+    extended: true
+}))
 
 // init db
-require('./dbs/init.mongodb')
+// require('./dbs/init.mongodb')
+
+mongoose
+    .connect(process.env.CONNECTION_STRING, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        dbName: 'eBakery-db'
+    })
+    .then(() => {
+        console.log('Database Connection is ready...');
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
 // const { countConnect } = require('./helpers/check.connect')
 // countConnect()
-const { checkOverload } = require('./helpers/check.connect')
-checkOverload()
-
-
+// const { checkOverload } = require('./helpers/check.connect')
+// checkOverload()
 
 // init route
-app.get('/', ( req, res, next) =>{
-    const strCompress = 'Hello FantipJs'
-    return res.status(200).json({
-        message: 'Welcom Fantipjs',
-        metadata: strCompress.repeat(100000)
-    })
-})
+app.use('/', require('./routes'))
+
 
 // handling error
 
